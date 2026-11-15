@@ -184,6 +184,8 @@ def read_team(project_root: Path) -> dict[str, Any]:
 def read_stakeholders(project_root: Path) -> dict[str, Any]:
     return read_optional_yaml_mapping(project_root / "00_admin" / "stakeholders.yml")
 
+def read_planning_decision(project_root: Path) -> dict[str, Any]:
+    return read_optional_yaml_mapping(project_root / "01_planning" / "planning_decision.yml")
 
 def audit_title(
     initial_data: dict[str, Any],
@@ -239,10 +241,12 @@ def build_cover(project_root: Path) -> str:
 
 def build_audit_facts(project_root: Path) -> str:
     initial = read_initial_data(project_root)
+    planning_decision = read_planning_decision(project_root)
     messages = project_messages(project_root)
     not_documented = message(messages, "report.not_documented")
     objectives = initial.get("objectives", [])
-    scope = initial.get("scope", {})
+    # the scope is pulled from planning_decision, since at the planning stage the scope can be adjusted.
+    scope = planning_decision.get("scope", {})
     scope = scope if isinstance(scope, dict) else {}
 
     objective_items = []

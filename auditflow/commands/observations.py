@@ -24,7 +24,7 @@ FENCED_YAML_PATTERN = re.compile(
 OBS_ID_PATTERN = re.compile(r"^OBS-(\d{3,})$", re.IGNORECASE)
 
 GENERATED_FIELDS = (
-    "test_id", "risk_id", "risk_title", "control_id", "control_description",
+    "title", "test_id", "risk_id", "risk_title", "control_id", "control_description",
     "control_owner", "source_workpaper", "source_file",
 )
 

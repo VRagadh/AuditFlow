@@ -381,10 +381,21 @@ def create_audit_program(project_root: Path, overwrite: bool = False) -> dict[st
             language,
         )
     rows = audit_program["program_rows"]
+
+    apply_style_lst = ['control_description', 'test_script']
+    column_styles = {}
+    for col in apply_style_lst:
+        try:
+            idx = PROGRAM_TABLE_FIELDS.index(col)
+            column_styles[idx] = "min-width: 300px; white-space: normal;"
+        except ValueError:
+            print(f"WARNING: field {col} is not in PROGRAM_TABLE_FIELDS")
+    
     table = html_table(
         message(messages, "audit_program.table_headers"),
         [[row.get(field) for field in PROGRAM_TABLE_FIELDS] for row in rows],
         message(messages, "planning.approach.empty"),
+        column_styles=column_styles
     )
     write_yaml(audit_program_path, audit_program)
     refresh_table_document(document_path, content, "AUDIT_PROGRAM", table)

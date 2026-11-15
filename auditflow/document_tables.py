@@ -13,7 +13,7 @@ def mapping_rows(value: Any) -> list[dict[str, Any]]:
 
 def cell_text(value: Any) -> str:
     if isinstance(value, list):
-        return "\n".join(cell_text(item) for item in value)
+        return "\n".join(f'- {cell_text(item)}' for item in value)
     return "" if value is None else str(value).strip()
 
 
@@ -21,13 +21,28 @@ def html_text(value: Any) -> str:
     return escape(cell_text(value)).replace("`", "&#96;").replace("\n", "<br>")
 
 
-def html_table(headers: list[str], rows: list[list[Any]], empty_text: str) -> str:
+def html_table(
+        headers: list[str], 
+        rows: list[list[Any]], 
+        empty_text: str,
+        column_styles: dict[int, str] | None = None
+        ) -> str:
     rows = [row for row in rows if any(cell_text(value) for value in row)]
     if not rows:
         return f"<p><em>{html_text(empty_text)}</em></p>"
     headings = "".join(f'<th scope="col">{html_text(value)}</th>' for value in headers)
+
+    # it allows to apply styles to the columns specified in the create_audit_program function (audit_program.py)
+    # this is important because some columns must inherently contain a lot of text, which requires a wider column.
+    def make_cell(value: Any, col_idx: int) -> str:
+        html_val = html_text(value)
+        style = column_styles.get(col_idx) if column_styles else None
+        if style:
+            return f'<td><div style="{style}">{html_val}</div></td>'
+        return f"<td>{html_val}</td>"
+
     body = "\n".join(
-        "<tr>" + "".join(f"<td>{html_text(value)}</td>" for value in row) + "</tr>"
+        "<tr>" + "".join(make_cell(value, idx) for idx, value in enumerate(row)) + "</tr>"
         for row in rows
     )
     return (
