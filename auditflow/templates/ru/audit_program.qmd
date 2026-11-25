@@ -9,5 +9,14 @@ format:
 
 Внесите изменения в `audit_program.yml` и повторите `auditflow create audit-program`, чтобы обновить таблицу.
 
+Чтобы изменить ширину нужного столбца используйте соответствующий класс в вашем файле стилей css.
+
+```{text}
+.col-control-description {
+    min-width: 300px;
+    white-space: normal;
+}
+```
+
 <!-- AUTO:AUDIT_PROGRAM START -->
 <!-- AUTO:AUDIT_PROGRAM END -->

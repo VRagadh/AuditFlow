@@ -9,5 +9,14 @@ format:
 
 Edit the program in `audit_program.yml` and rerun `auditflow create audit-program` to refresh this table.
 
+To change the width of the required column, use the corresponding class in your CSS styles file.
+
+```{text}
+.col-control-description {
+ min-width: 300px;
+ white-space: normal;
+}
+```
+
 <!-- AUTO:AUDIT_PROGRAM START -->
 <!-- AUTO:AUDIT_PROGRAM END -->

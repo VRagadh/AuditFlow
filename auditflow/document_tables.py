@@ -22,27 +22,31 @@ def html_text(value: Any) -> str:
 
 
 def html_table(
-        headers: list[str], 
-        rows: list[list[Any]], 
-        empty_text: str,
-        column_styles: dict[int, str] | None = None
-        ) -> str:
+    headers: list[str], 
+    rows: list[list[Any]], 
+    empty_text: str,
+    field_names: list[str] | None = None
+) -> str:
     rows = [row for row in rows if any(cell_text(value) for value in row)]
     if not rows:
         return f"<p><em>{html_text(empty_text)}</em></p>"
-    headings = "".join(f'<th scope="col">{html_text(value)}</th>' for value in headers)
+        
+    def get_class(idx: int) -> str:
+        if field_names and idx < len(field_names):
+            # Convert snake_case to kebab-case for CSS (test_script -> col-test-script)
+            return f' class="col-{field_names[idx].replace("_", "-")}"'
+        return ""
 
-    # it allows to apply styles to the columns specified in the create_audit_program function (audit_program.py)
-    # this is important because some columns must inherently contain a lot of text, which requires a wider column.
-    def make_cell(value: Any, col_idx: int) -> str:
-        html_val = html_text(value)
-        style = column_styles.get(col_idx) if column_styles else None
-        if style:
-            return f'<td><div style="{style}">{html_val}</div></td>'
-        return f"<td>{html_val}</td>"
-
+    headings = "".join(
+        f'<th scope="col"{get_class(idx)}>{html_text(value)}</th>' 
+        for idx, value in enumerate(headers)
+    )
+    
     body = "\n".join(
-        "<tr>" + "".join(make_cell(value, idx) for idx, value in enumerate(row)) + "</tr>"
+        "<tr>" + "".join(
+            f"<td{get_class(idx)}>{html_text(value)}</td>" 
+            for idx, value in enumerate(row)
+        ) + "</tr>"
         for row in rows
     )
     return (

@@ -75,7 +75,6 @@ tbody tr:nth-child(even) {
 
 .scroll-table-container th,
 .scroll-table-container td {
-    min-width: 6rem;
     padding: 0.5rem;
     vertical-align: top;
 }
@@ -85,6 +84,21 @@ tbody tr:nth-child(even) {
     top: 0;
     z-index: 1;
     background-color: var(--af-surface, #f7f9fb);
+}
+
+.col-control-description {
+    min-width: 300px;
+    white-space: normal;
+}
+
+.col-test-script {
+    min-width: 500px;
+    white-space: normal;
+}
+
+.col-test-hypothesis {
+    min-width: 300px;
+    white-space: normal;
 }
 
 /* Code */
